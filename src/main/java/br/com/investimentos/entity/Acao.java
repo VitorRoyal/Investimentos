@@ -3,9 +3,17 @@ package br.com.investimentos.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "acoes")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Acao {
 
     @Id
@@ -13,27 +21,4 @@ public class Acao {
 
     private String descricao;
 
-    public Acao() {
-    }
-
-    public Acao(String acaoId, String descricao) {
-        this.acaoId = acaoId;
-        this.descricao = descricao;
-    }
-
-    public String getAcaoId() {
-        return acaoId;
-    }
-
-    public void setAcaoId(String acao_id) {
-        this.acaoId = acao_id;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
 }

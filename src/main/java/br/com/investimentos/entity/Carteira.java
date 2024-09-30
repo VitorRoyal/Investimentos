@@ -1,14 +1,21 @@
 package br.com.investimentos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "carteiras")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Carteira {
 
     @Id
@@ -29,54 +36,4 @@ public class Carteira {
     @JsonIgnore
     private List<CarteiraAcao> carteirasAcoes;
 
-    public Carteira() {
-    }
-
-    public Carteira(UUID carteiraId, String descricao, Usuario usuario, EnderecoCobranca enderecoCobranca, List<CarteiraAcao> carteirasAcoes) {
-        this.carteiraId = carteiraId;
-        this.descricao = descricao;
-        this.usuario = usuario;
-        this.enderecoCobranca = enderecoCobranca;
-        this.carteirasAcoes = carteirasAcoes;
-    }
-
-    public UUID getCarteiraId() {
-        return carteiraId;
-    }
-
-    public void setCarteiraId(UUID contaId) {
-        this.carteiraId = contaId;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public EnderecoCobranca getEnderecoCobranca() {
-        return enderecoCobranca;
-    }
-
-    public void setEnderecoCobranca(EnderecoCobranca enderecoCobranca) {
-        this.enderecoCobranca = enderecoCobranca;
-    }
-
-    public List<CarteiraAcao> getCarteirasAcoes() {
-        return carteirasAcoes;
-    }
-
-    public void setCarteirasAcoes(List<CarteiraAcao> carteirasAcoes) {
-        this.carteirasAcoes = carteirasAcoes;
-    }
 }

@@ -6,6 +6,7 @@ import br.com.investimentos.controller.dto.CriaCarteiraDto;
 import br.com.investimentos.controller.dto.CriaUsuarioDto;
 import br.com.investimentos.entity.Usuario;
 import br.com.investimentos.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody CriaUsuarioDto dto) {
+    public ResponseEntity<Usuario> cadastrarUsuario(@Valid @RequestBody CriaUsuarioDto dto) {
         usuarioService.cadastrarUsuario(dto);
         return ResponseEntity.ok().build();
     }
@@ -43,7 +44,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/atualizar/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable String id,
+    public ResponseEntity<Usuario> atualizarUsuario(@Valid @PathVariable String id,
                                                     @RequestBody AtualizaUsuarioDto dto) {
         usuarioService.atualizarUsuario(id, dto);
         return ResponseEntity.noContent().build();
@@ -56,7 +57,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/{usuarioId}/carteiras")
-    public ResponseEntity<Void> criarCarteira(@PathVariable String usuarioId,
+    public ResponseEntity<Void> criarCarteira(@Valid @PathVariable String usuarioId,
                                               @RequestBody CriaCarteiraDto dto) {
         usuarioService.criarCarteira(usuarioId, dto);
         return ResponseEntity.ok().build();

@@ -1,11 +1,19 @@
 package br.com.investimentos.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "endereco_cobranca")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnderecoCobranca {
 
     @Id
@@ -22,37 +30,4 @@ public class EnderecoCobranca {
 
     private Integer numero;
 
-    public EnderecoCobranca() {
-    }
-
-    public EnderecoCobranca(UUID id, Carteira carteira, String endereco, Integer numero) {
-        this.id = id;
-        this.carteira = carteira;
-        this.endereco = endereco;
-        this.numero = numero;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    public Integer getNumero() {
-        return numero;
-    }
-
-    public void setNumero(Integer numero) {
-        this.numero = numero;
-    }
 }

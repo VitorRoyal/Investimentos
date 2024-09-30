@@ -1,5 +1,7 @@
 package br.com.investimentos.controller.dto;
 
-public record CriaAcaoDto(String acaoId,
-                          String descricao) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CriaAcaoDto(@NotBlank String acaoId,
+                          @NotBlank String descricao) {
 }

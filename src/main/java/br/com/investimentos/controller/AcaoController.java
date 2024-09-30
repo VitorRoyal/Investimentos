@@ -2,6 +2,7 @@ package br.com.investimentos.controller;
 
 import br.com.investimentos.controller.dto.CriaAcaoDto;
 import br.com.investimentos.service.AcaoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class AcaoController {
 
 
     @PostMapping("/criar")
-    public ResponseEntity<Void> criarAcao(@RequestBody CriaAcaoDto dto) {
+    public ResponseEntity<Void> criarAcao(@Valid @RequestBody CriaAcaoDto dto) {
         acaoService.criarAcao(dto);
         return ResponseEntity.ok().build();
     }

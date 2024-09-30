@@ -1,5 +1,7 @@
 package br.com.investimentos.controller.dto;
 
-public record AtualizaUsuarioDto(String nome,
-                                 String senha) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AtualizaUsuarioDto(@NotBlank String nome,
+                                 @NotBlank String senha) {
 }

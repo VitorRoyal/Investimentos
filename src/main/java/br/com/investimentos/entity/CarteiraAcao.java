@@ -1,9 +1,17 @@
 package br.com.investimentos.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "carteiras_acoes")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarteiraAcao {
 
     @EmbeddedId
@@ -21,45 +29,4 @@ public class CarteiraAcao {
 
     private Integer quantidade;
 
-    public CarteiraAcao() {
-    }
-
-    public CarteiraAcao(CarteiraAcaoId id, Carteira carteira, Acao acao, Integer quantidade) {
-        this.id = id;
-        this.carteira = carteira;
-        this.acao = acao;
-        this.quantidade = quantidade;
-    }
-
-    public CarteiraAcaoId getId() {
-        return id;
-    }
-
-    public void setId(CarteiraAcaoId id) {
-        this.id = id;
-    }
-
-    public Carteira getCarteira() {
-        return carteira;
-    }
-
-    public void setCarteira(Carteira carteira) {
-        this.carteira = carteira;
-    }
-
-    public Acao getAcao() {
-        return acao;
-    }
-
-    public void setAcao(Acao acao) {
-        this.acao = acao;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
 }

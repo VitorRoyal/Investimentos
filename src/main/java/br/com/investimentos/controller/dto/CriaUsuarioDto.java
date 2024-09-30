@@ -1,6 +1,9 @@
 package br.com.investimentos.controller.dto;
 
-public record CriaUsuarioDto(String nome,
-                             String email,
-                             String senha) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record CriaUsuarioDto(@NotBlank String nome,
+                             @Email String email,
+                             @NotBlank String senha) {
 }
