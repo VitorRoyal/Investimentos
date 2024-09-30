@@ -3,6 +3,7 @@ package br.com.investimentos.service;
 import br.com.investimentos.client.BrapiClient;
 import br.com.investimentos.controller.dto.AssociaCarteiraAcaoDto;
 import br.com.investimentos.controller.dto.CarteiraAcaoResponseDto;
+import br.com.investimentos.entity.AcaoInfo;
 import br.com.investimentos.entity.CarteiraAcao;
 import br.com.investimentos.entity.CarteiraAcaoId;
 import br.com.investimentos.repository.AcaoRepository;
@@ -63,37 +64,37 @@ public class CarteiraService {
 
         return carteira.getCarteirasAcoes()
                 .stream()
-                .map(ca ->
-                        new CarteiraAcaoResponseDto(
-                                ca.getAcao().getAcaoId(),
-                                ca.getQuantidade(),
-                                getTotal(ca.getQuantidade(),ca.getAcao().getAcaoId())
-                        ))
+                .map(ca -> {
+                    var acaoInfo = getAcaoInfo(ca.getAcao().getAcaoId());
+                    return new CarteiraAcaoResponseDto(
+                            acaoInfo.getLongName(),
+                            ca.getAcao().getAcaoId(),
+                            ca.getQuantidade(),
+                            ca.getQuantidade() * acaoInfo.getRegularMarketPrice(),
+                            acaoInfo.getCurrency()
+                    );
+                })
                 .toList();
     }
 
-    private double getTotal(Integer quantidade, String acaoId) {
+    private AcaoInfo getAcaoInfo(String acaoId) {
         try {
-            System.out.println("Buscando ação: " + acaoId + " com token: " + TOKEN);
+            System.out.println("Buscando ação: " + acaoId + " com o token");
             var response = brapiClient.getAcao(TOKEN, acaoId);
             System.out.println("Resposta da API: " + response);
 
             var resultados = response.results();
 
             if (resultados == null || resultados.isEmpty()) {
-                // Log the error for debugging purposes
                 System.err.println("Nenhum resultado encontrado para a ação: " + acaoId);
-                // Return a default value or handle the error as needed
-                return 0.0;
+                return new AcaoInfo(0.0, "N/A", "N/A");
             }
 
-            var preco = resultados.get(0).regularMarketPrice();
-            return quantidade * preco;
+            var resultado = resultados.get(0);
+            return new AcaoInfo(resultado.regularMarketPrice(), resultado.longName(), resultado.currency());
         } catch (Exception e) {
-            // Log the exception for debugging purposes
             System.err.println("Erro ao buscar a ação: " + acaoId + ". Detalhes: " + e.getMessage());
-            // Return a default value or handle the error as needed
-            return 0.0;
+            return new AcaoInfo(0.0, "N/A", "N/A");
         }
     }
 }
