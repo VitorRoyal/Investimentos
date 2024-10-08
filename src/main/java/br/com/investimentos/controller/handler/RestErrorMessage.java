@@ -1,4 +1,4 @@
-package br.com.investimentos.infra;
+package br.com.investimentos.controller.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

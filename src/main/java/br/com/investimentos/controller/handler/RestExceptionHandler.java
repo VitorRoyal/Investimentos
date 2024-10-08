@@ -1,4 +1,4 @@
-package br.com.investimentos.infra;
+package br.com.investimentos.controller.handler;
 
 import br.com.investimentos.exceptions.AcaoNotFoundException;
 import br.com.investimentos.exceptions.CarteiraNotFoundException;

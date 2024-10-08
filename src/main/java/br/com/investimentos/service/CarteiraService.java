@@ -17,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,7 +76,7 @@ public class CarteiraService {
                             acaoInfo.getLongName(),
                             ca.getAcao().getAcaoId(),
                             ca.getQuantidade(),
-                            ca.getQuantidade() * acaoInfo.getRegularMarketPrice(),
+                            BigDecimal.valueOf(ca.getQuantidade() * acaoInfo.getRegularMarketPrice()).round(new MathContext(2, RoundingMode.CEILING)).doubleValue(),
                             acaoInfo.getCurrency()
                     );
                 })
