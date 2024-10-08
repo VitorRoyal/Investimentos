@@ -37,4 +37,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
 
+    //Deixar em baixo pois é o mais genérico e o spring pode confundir
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<RestErrorMessage> erroGenerico(Exception ex){
+        RestErrorMessage errorMessage = new RestErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
+
 }
