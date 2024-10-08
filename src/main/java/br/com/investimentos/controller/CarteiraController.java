@@ -22,7 +22,6 @@ public class CarteiraController {
     public ResponseEntity<Void> associaAcao(@PathVariable String carteiraId,
                                             @RequestBody AssociaCarteiraAcaoDto dto) {
         carteiraService.associaAcao(carteiraId, dto);
-
         return ResponseEntity.ok().build();
     }
 

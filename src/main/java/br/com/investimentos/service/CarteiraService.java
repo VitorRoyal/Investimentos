@@ -6,6 +6,9 @@ import br.com.investimentos.controller.dto.CarteiraAcaoResponseDto;
 import br.com.investimentos.entity.AcaoInfo;
 import br.com.investimentos.entity.CarteiraAcao;
 import br.com.investimentos.entity.CarteiraAcaoId;
+import br.com.investimentos.exceptions.AcaoInfoException;
+import br.com.investimentos.exceptions.AcaoNotFoundException;
+import br.com.investimentos.exceptions.CarteiraNotFoundException;
 import br.com.investimentos.repository.AcaoRepository;
 import br.com.investimentos.repository.CarteiraAcaoRepository;
 import br.com.investimentos.repository.CarteiraRepository;
@@ -41,9 +44,9 @@ public class CarteiraService {
 
     public void associaAcao(String carteiraId, AssociaCarteiraAcaoDto dto) {
         var carteira = carteiraRepository.findById(UUID.fromString(carteiraId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada"));
         var acao = acaoRepository.findById(dto.acaoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AcaoNotFoundException("Ação não encontrada"));
 
         //DTO -> Entity
         var id = new CarteiraAcaoId(carteira.getCarteiraId(), acao.getAcaoId());
@@ -60,7 +63,7 @@ public class CarteiraService {
 
     public List<CarteiraAcaoResponseDto> listaAcao(String carteiraId) {
         var carteira = carteiraRepository.findById(UUID.fromString(carteiraId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CarteiraNotFoundException("Carteira não encontrada"));
 
         return carteira.getCarteirasAcoes()
                 .stream()
@@ -78,23 +81,17 @@ public class CarteiraService {
     }
 
     private AcaoInfo getAcaoInfo(String acaoId) {
-        try {
-            System.out.println("Buscando ação: " + acaoId + " com o token");
-            var response = brapiClient.getAcao(TOKEN, acaoId);
-            System.out.println("Resposta da API: " + response);
+        System.out.println("Buscando ação: " + acaoId + " com o token");
+        var response = brapiClient.getAcao(TOKEN, acaoId);
+        System.out.println("Resposta da API: " + response);
 
-            var resultados = response.results();
+        var resultados = response.results();
 
-            if (resultados == null || resultados.isEmpty()) {
-                System.err.println("Nenhum resultado encontrado para a ação: " + acaoId);
-                return new AcaoInfo(0.0, "N/A", "N/A");
-            }
-
-            var resultado = resultados.get(0);
-            return new AcaoInfo(resultado.regularMarketPrice(), resultado.longName(), resultado.currency());
-        } catch (Exception e) {
-            System.err.println("Erro ao buscar a ação: " + acaoId + ". Detalhes: " + e.getMessage());
-            return new AcaoInfo(0.0, "N/A", "N/A");
+        if (resultados == null || resultados.isEmpty()) {
+            throw new AcaoInfoException("Nenhum resultado encontrado para a ação: " + acaoId);
         }
+
+        var resultado = resultados.get(0);
+        return new AcaoInfo(resultado.regularMarketPrice(), resultado.longName(), resultado.currency());
     }
 }

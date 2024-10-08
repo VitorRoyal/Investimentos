@@ -7,12 +7,13 @@ import br.com.investimentos.controller.dto.CriaUsuarioDto;
 import br.com.investimentos.entity.Carteira;
 import br.com.investimentos.entity.EnderecoCobranca;
 import br.com.investimentos.entity.Usuario;
+import br.com.investimentos.exceptions.UsuarioInvalidoException;
+import br.com.investimentos.exceptions.UsuarioNotFoundException;
 import br.com.investimentos.repository.CarteiraRepository;
 import br.com.investimentos.repository.EnderecoCobrancaRepository;
 import br.com.investimentos.repository.UsuarioRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class UsuarioService {
     }
 
     public UUID cadastrarUsuario(CriaUsuarioDto dto) {
+
         var usuario = new Usuario(UUID.randomUUID(),
                 dto.nome(),
                 dto.email(),
@@ -43,12 +45,19 @@ public class UsuarioService {
                 Instant.now(),
                 null);
 
+        if(usuarioRepository.existsByEmail(dto.email())){
+            throw new UsuarioInvalidoException("Email já cadastrado");
+        }
+
         var usuarioSalvo = usuarioRepository.save(usuario);
 
         return usuarioSalvo.getUsuarioId();
     }
 
     public Optional<Usuario> buscarUsuarioPeloId(String usuarioId) {
+         if(!usuarioRepository.existsById(UUID.fromString(usuarioId))){
+            throw new UsuarioNotFoundException("Usuário não encontrado");
+        }
         return usuarioRepository.findById(UUID.fromString(usuarioId));
     }
 
@@ -69,7 +78,7 @@ public class UsuarioService {
             }
             usuarioRepository.save(usuarioAtualizado);
         } else {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsuarioNotFoundException("Usuário não encontrado");
         }
 
     }
@@ -79,13 +88,15 @@ public class UsuarioService {
         var usarioExiste = usuarioRepository.existsById(id);
         if(usarioExiste){
             usuarioRepository.deleteById(id);
+        } else {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
         }
 
     }
 
     public void criarCarteira(String usuarioId, CriaCarteiraDto dto) {
         var usuario = usuarioRepository.findById(UUID.fromString(usuarioId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
 
         var carteira = new Carteira(
                 UUID.randomUUID(),
@@ -110,7 +121,7 @@ public class UsuarioService {
 
     public List<CarteiraResponseDto> listarCarteira(String usuarioId) {
         var usuario = usuarioRepository.findById(UUID.fromString(usuarioId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário não encontrado"));
 
         return usuario.getCarteiras()
                 .stream()
